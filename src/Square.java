@@ -1,21 +1,32 @@
 
 public class Square 
 {
-	private int alive;
+	public int alive;
+	private int liveAroundMe;
 	
-	private Square neighbor1;
-	private Square neighbor2;
-	private Square neighbor3;
-	private Square neighbor4;
-	private Square neighbor5;
-	private Square neighbor6;
-	private Square neighbor7;
-	private Square neighbor8;
+//	public Square neighbor1;
+//	public Square neighbor2;
+//	public Square neighbor3;
+//	public Square neighbor4;
+//	public Square neighbor5;
+//	public Square neighbor6;
+//	public Square neighbor7;
+//	public Square neighbor8;
 	
 	public Square(int alive)
 	{
 		this.alive = alive;
+		this.liveAroundMe = 0;
 	}
 	
+	public boolean isAlive()
+	{
+		return this.alive == 1;
+	}
 	
+//	public boolean incrementLiveAroundMe()
+//	{
+//		this.liveAroundMe ++;
+//		return this.liveAroundMe >= 3;
+//	}
 }
