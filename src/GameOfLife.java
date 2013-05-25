@@ -52,14 +52,32 @@ public class GameOfLife
 			}
 			
 			//apply changes only after iterating through matrix
-			for(int i=0; i<this.width; i++)
+			this.applyChanges();
+			
+			//uncomment here to view intermediate states
+			//this.writeOutState("State at iteration:" + x);
+		}
+		
+		//for testing 
+		//this.writeOutState("Final State:");
+		this.writeOutState(null);
+	}
+	
+	private void applyChanges()
+	{
+		for(int i=0; i<this.width; i++)
+		{
+			for(int j=0; j<this.height; j++)
 			{
-				for(int j=0; j<this.height; j++)
-				{
-					this.squareGrid[i][j].applyChanges();
-				}
+				this.squareGrid[i][j].applyChanges();
 			}
 		}
+	}
+	
+	private void writeOutState(String message)
+	{
+		if(message != null)
+			System.out.println(message);
 		
 		//write to stdout
 		for(int i=0; i<this.width; i++)
@@ -71,6 +89,7 @@ public class GameOfLife
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	private int getCountOfLiveNeighbors(int i, int j)
