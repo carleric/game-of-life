@@ -1,14 +1,11 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class GameOfLife 
 {
 	private int iterations;
 	private int width;
 	private int height;
-	//private ArrayList <Square>squares;
 	private Square squareGrid[][];
 	
 	public GameOfLife(int iterations, int width, int height, Square squareGrid[][])
@@ -28,74 +25,102 @@ public class GameOfLife
 				for(int j = 0; j < this.height; j++)
 				{
 					Square s = this.squareGrid[i][j];
+					int liveAroundMe = this.getCountOfLiveNeighbors(i, j);
 					
 					//is dead
 					if(!s.isAlive())
 					{
 						//rule 1: are there 3 live squares around me? if yes, go live
-						
-						//count of live
-						int liveAroundMe = 0;
-						
-						//left/west
-						if(i > 0){
-							liveAroundMe += this.squareGrid[i-1][j].alive;
+						if(liveAroundMe == 3)
+						{
+							s.alive = 1;
 						}else{
-							liveAroundMe += this.squareGrid[this.width-1][j].alive;
+							//do nothing, already dead
 						}
-						
-						//left-up / northwest
-						if(i > 0 && j > 0){
-							liveAroundMe += this.squareGrid[i-1][j-1].alive;
-						}else if(i > 0 && j == 0){
-							liveAroundMe += this.squareGrid[i-1][this.height -1].alive;
-						}else if(i == 0 && j > 0){
-							liveAroundMe += this.squareGrid[this.width - 1][j-1].alive;
-						}else if(i == 0 && j == 0){
-							liveAroundMe += this.squareGrid[this.width - 1][this.height - 1].alive;
-						}
-						
-						//up / north
-						if(j == 0){
-							liveAroundMe += this.squareGrid[i][this.height-1].alive;
-						}else{
-							liveAroundMe += this.squareGrid[i][j -1].alive;
-						}
-						
-						//right-up / northeast
-						if(i == (this.width - 1) && j > 0){
-							liveAroundMe += this.squareGrid[0][j-1].alive;
-						}else if(i == (this.width - 1) && j == 0){
-							liveAroundMe += this.squareGrid[0][this.height -1].alive;
-						}else if(i < (this.width-1) && j > 0){
-							liveAroundMe += this.squareGrid[i+1][j-1].alive;
-						}
-						
-						//right
-						if(i == (this.width-1)){
-							liveAroundMe += this.squareGrid[0][j].alive;
-						}else{
-							liveAroundMe += this.squareGrid[i+1][j].alive;
-						}
-						
-						//right-down / southeast
-//						if(i == (this.width - 1) && j > 0){
-//							liveAroundMe += this.squareGrid[0][j-1].alive;
-//						}else if(i == (this.width - 1) && j == 0){
-//							liveAroundMe += this.squareGrid[0][this.height -1].alive;
-//						}else if(i < (this.width-1) && j > 0){
-//							liveAroundMe += this.squareGrid[i+1][j-1].alive;
-//						}
 					}
 					else//is alive
 					{
-						
+						//rule #2: A live square "dies" if it has less than two live neighbors, or more than three live neighbors
+						if(liveAroundMe < 2 || liveAroundMe > 3)
+							s.alive = 0;
 					}
-					
-					
 				}
 			}
 		}
+	}
+	
+	private int getCountOfLiveNeighbors(int i, int j)
+	{
+		//count of live
+		int liveAroundMe = 0;
+		
+		//left/west (-1, 0)
+		if(i > 0){
+			liveAroundMe += this.squareGrid[i-1][j].alive;
+		}else{
+			liveAroundMe += this.squareGrid[this.width-1][j].alive;
+		}
+		
+		//left-up / northwest (-1, -1)
+		if(i > 0 && j > 0){
+			liveAroundMe += this.squareGrid[i-1][j-1].alive;
+		}else if(i > 0 && j == 0){
+			liveAroundMe += this.squareGrid[i-1][this.height -1].alive;
+		}else if(i == 0 && j > 0){
+			liveAroundMe += this.squareGrid[this.width - 1][j-1].alive;
+		}else if(i == 0 && j == 0){
+			liveAroundMe += this.squareGrid[this.width - 1][this.height - 1].alive;
+		}
+		
+		//up / north (0, -1)
+		if(j == 0){
+			liveAroundMe += this.squareGrid[i][this.height-1].alive;
+		}else{
+			liveAroundMe += this.squareGrid[i][j -1].alive;
+		}
+		
+		//right-up / northeast (+1, -1)
+		if(i == (this.width - 1) && j > 0){
+			liveAroundMe += this.squareGrid[0][j-1].alive;
+		}else if(i == (this.width - 1) && j == 0){
+			liveAroundMe += this.squareGrid[0][this.height -1].alive;
+		}else if(i < (this.width-1) && j > 0){
+			liveAroundMe += this.squareGrid[i+1][j-1].alive;
+		}
+		
+		//right (+1, 0)
+		if(i == (this.width-1)){
+			liveAroundMe += this.squareGrid[0][j].alive;
+		}else{
+			liveAroundMe += this.squareGrid[i+1][j].alive;
+		}
+		
+		//right-down / southeast (+1, +1)
+		if(i == (this.width - 1) && j == (this.height-1)){
+			liveAroundMe += this.squareGrid[0][0].alive;
+		}else if(i == (this.width - 1) && j < (this.height-1)){
+			liveAroundMe += this.squareGrid[0][j+1].alive;
+		}else {
+			liveAroundMe += this.squareGrid[i+1][j+1].alive;
+		}
+		
+		//down / south (0, 1)
+		if(j == (this.height-1)){
+			liveAroundMe += this.squareGrid[i][j+1].alive;
+		}else{
+			liveAroundMe += this.squareGrid[i][0].alive;
+		}
+		
+		//down-left / southwest (-1, +1)
+		if(i == 0 && j == (this.height-1)){
+			liveAroundMe += this.squareGrid[this.width-1][0].alive;
+		}else if(i == 0 && j < (this.height-1)){
+			liveAroundMe += this.squareGrid[this.width-1][j+1].alive;
+		}else {
+			liveAroundMe += this.squareGrid[i-1][j+1].alive;
+		}
+		
+		return liveAroundMe;
 	}
 	
 	public static void main(String[] args) 
@@ -141,8 +166,7 @@ public class GameOfLife
 			String[] squaresStrings = null;
 			try {
 				squaresStrings = br.readLine().split(" ");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			if(squaresStrings != null)
@@ -150,7 +174,6 @@ public class GameOfLife
 				for(int j = 0; j < width; j++)
 				{
 					Square square = new Square(Integer.parseInt(squaresStrings[j]));
-					//squares.add(square);
 					squareGrid[i][j] = square;
 				}
 			}
