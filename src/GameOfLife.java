@@ -33,7 +33,8 @@ public class GameOfLife
 						//rule 1: are there 3 live squares around me? if yes, go live
 						if(liveAroundMe == 3)
 						{
-							s.alive = 1;
+							//s.alive = 1;
+							s.markAlive();
 						}else{
 							//do nothing, already dead
 						}
@@ -42,8 +43,20 @@ public class GameOfLife
 					{
 						//rule #2: A live square "dies" if it has less than two live neighbors, or more than three live neighbors
 						if(liveAroundMe < 2 || liveAroundMe > 3)
-							s.alive = 0;
+						{
+							//s.alive = 0;
+							s.markDead();
+						}
 					}
+				}
+			}
+			
+			//apply changes only after iterating through matrix
+			for(int i=0; i<this.width; i++)
+			{
+				for(int j=0; j<this.height; j++)
+				{
+					this.squareGrid[i][j].applyChanges();
 				}
 			}
 		}
