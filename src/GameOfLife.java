@@ -47,6 +47,17 @@ public class GameOfLife
 				}
 			}
 		}
+		
+		//write to stdout
+		for(int i=0; i<this.width; i++)
+		{
+			for(int j=0; j<this.height; j++)
+			{
+				System.out.print(this.squareGrid[i][j].alive);
+				System.out.print(' ');
+			}
+			System.out.println();
+		}
 	}
 	
 	private int getCountOfLiveNeighbors(int i, int j)
@@ -84,6 +95,8 @@ public class GameOfLife
 			liveAroundMe += this.squareGrid[0][j-1].alive;
 		}else if(i == (this.width - 1) && j == 0){
 			liveAroundMe += this.squareGrid[0][this.height -1].alive;
+		}else if(i < (this.width - 1) && j == 0){
+			liveAroundMe += this.squareGrid[i+1][this.height -1].alive;
 		}else if(i < (this.width-1) && j > 0){
 			liveAroundMe += this.squareGrid[i+1][j-1].alive;
 		}
@@ -100,20 +113,24 @@ public class GameOfLife
 			liveAroundMe += this.squareGrid[0][0].alive;
 		}else if(i == (this.width - 1) && j < (this.height-1)){
 			liveAroundMe += this.squareGrid[0][j+1].alive;
+		}else if(i < (this.width -1) && j == (this.height-1)){
+			liveAroundMe += this.squareGrid[i+1][0].alive;
 		}else {
 			liveAroundMe += this.squareGrid[i+1][j+1].alive;
 		}
 		
 		//down / south (0, 1)
 		if(j == (this.height-1)){
-			liveAroundMe += this.squareGrid[i][j+1].alive;
-		}else{
 			liveAroundMe += this.squareGrid[i][0].alive;
+		}else{
+			liveAroundMe += this.squareGrid[i][j+1].alive;
 		}
 		
 		//down-left / southwest (-1, +1)
 		if(i == 0 && j == (this.height-1)){
 			liveAroundMe += this.squareGrid[this.width-1][0].alive;
+		}else if(i > 0 && j == (this.height-1)){
+			liveAroundMe += this.squareGrid[i-1][0].alive;
 		}else if(i == 0 && j < (this.height-1)){
 			liveAroundMe += this.squareGrid[this.width-1][j+1].alive;
 		}else {
